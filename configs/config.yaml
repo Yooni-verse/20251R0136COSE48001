@@ -1,0 +1,31 @@
+device: cuda
+model_config: model/ViT-B-16.json
+model_ckpt: model/tsbir_model_final.pt
+is_train: False
+retrieval_metric: cosine  # cosine | dot
+top_k: 5
+
+encoding:
+  batch_size: 32
+  num_workers: 2
+  image_dir: images/
+
+inference:
+  sketch_path: sketches/airplane.jpg #sketches/COCO_val2014_000000163852.jpg
+  caption: "An airplane." #"It is a plate of food."
+  save_result_path: retrieval_result.jpg
+
+train:
+  batch_size: 64
+  num_workers: 4
+  dataset:
+    name: sketchy
+    sketch_folder: data/sketches/
+    image_folder: data/photos/
+    annotation_file: data/annotations/train.json
+  epochs: 100
+  learning_rate: 1e-4
+  temperature: 0.07
+  optimizer: adam
+  save_every: 10
+  save_path: checkpoints/
