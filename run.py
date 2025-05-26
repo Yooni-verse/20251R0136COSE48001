@@ -53,11 +53,6 @@ def run(config):
     transform = _transform(model.visual.input_resolution, is_train=config["is_train"])
     tokenizer = tokenize
 
-    for name, module in model.named_modules():
-        if not module.requires_grad_:
-            print(f"name: {name}, module: {module}")
-    return
-
     # Load pipeline
     pipeline = Pipeline(
         config=config,
@@ -76,7 +71,7 @@ def run(config):
     
     # Inference
     pipeline.index_database(image_paths)
-    result_paths = pipeline.run_retrieval(sketch_path, image_paths)
+    result_paths = pipeline.run_retrieval(sketch_path, caption)
 
     # Results
     print(f"\n[QUERY] Caption: {caption}")

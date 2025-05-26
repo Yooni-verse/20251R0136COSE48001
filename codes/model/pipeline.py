@@ -31,7 +31,6 @@ class Pipeline:
         self.tokenizer = tokenizer
         self.device = device
 
-        # config 기반 설정
         self.top_k = config.get("top_k", 5)
         self.metric = config.get("retrieval_metric", "cosine")
         self.batch_size = config.get("encoding", {}).get("batch_size", 32)
@@ -75,7 +74,7 @@ class Pipeline:
                 imgs, paths = batch
                 imgs = imgs.to(self.device)
 
-                feats = self.encode_image(imgs)
+                feats = self.model.encode_image(imgs)
                 feats = feats / feats.norm(dim=-1, keepdim=True)
 
                 features.append(feats.cpu())
@@ -91,7 +90,7 @@ class Pipeline:
         print(f"[INFO] Indexed {len(self.image_paths)} images.")
 
     def retrieve(self, query_feature: torch.Tensor) -> list[str]:
-        query = query_feature.squeeze(0).cpu().numpy()
+        query = query_feature.cpu().numpy()
         if self.metric == "cosine":
             _, indices = self.nbrs.kneighbors(query)
         elif self.metric == "dot":
@@ -102,6 +101,7 @@ class Pipeline:
         return [self.image_paths[i] for i in indices[0]] if self.metric == "cosine" else [self.image_paths[i] for i in indices]
 
     def run_retrieval(self, sketch_path: str, caption: str) -> list[str]:
+        # print("CAPTION: ", caption)
         sketch = Image.open(sketch_path).convert("RGB")
         query_feat = self.encode_query(sketch, caption)
         return self.retrieve(query_feat)
