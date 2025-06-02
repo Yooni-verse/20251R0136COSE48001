@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sketch Interface</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <section class="hero">
+    <h1 class="main-title">Sketch your idea</h1>
+
+    <div class="interaction-container">
+      <div class="canvas-wrapper">
+        <!-- 🖌️ 펜 설정 -->
+        <div class="canvas-tools">
+          <select id="pen-type" aria-label="Pen type">
+            <option value="pencil">✏️ Pencil</option>
+            <option value="pen">🖊️ Pen</option>
+            <option value="eraser">🧽 Eraser</option>
+          </select>
+
+          <label for="pen-size">Size</label>
+          <input type="range" id="pen-size" min="1" max="20" value="6">
+        </div>
+
+        <!-- ✍️ 캔버스 -->
+        <canvas id="canvas" width="512" height="512"></canvas>
+
+        <!-- 🔘 입력 -->
+        <div class="controls">
+          <input id="caption" type="text" placeholder="Describe your sketch..." aria-label="Caption input"/>
+          <button id="submit">Submit</button>
+          <button id="clear">Clear</button>
+        </div>
+      </div>
+
+      <!-- 🔍 검색 결과 -->
+      <div id="result" class="hidden"></div>
+    </div>
+
+    <!-- 📋 상세 정보 -->
+    <div id="detail-view" class="hidden">
+      <div class="detail-image-wrapper">
+        <img id="detail-image" src="" alt="Selected item">
+      </div>
+      <div class="detail-info">
+        <h3 id="item-name">Item Name</h3>
+        <p id="item-price">Price: $0.00</p>
+        <a id="item-link" href="#" target="_blank">Buy now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔝 맨 위로 -->
+  <button id="scroll-top-btn" title="Go to top">⬆️</button>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

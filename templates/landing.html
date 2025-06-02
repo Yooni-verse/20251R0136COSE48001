@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sketch Intro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Playfair Display', serif;
+    }
+    #intro-text {
+      font-size: 3.5rem;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #4f772d;
+      animation: blink-caret 0.75s step-end infinite;
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #4f772d; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="intro-text"></h1>
+
+  <script>
+    const introText = "sketch everything.";
+    const introEl = document.getElementById("intro-text");
+    let i = 0;
+
+    function typeWriter() {
+      if (i < introText.length) {
+        introEl.textContent += introText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 100);
+      } else {
+        setTimeout(() => {
+          window.location.href = "/index";  // ✅ Flask 라우터 호출
+        }, 1500);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", typeWriter);
+  </script>
+</body>
+</html>

@@ -7,12 +7,12 @@ top_k: 5
 
 encoding:
   batch_size: 32
-  num_workers: 2
+  num_workers: 0
   image_dir: images/
 
 inference:
-  sketch_path: sketches/airplane.jpg #sketches/COCO_val2014_000000163852.jpg
-  caption: "An airplane." #"It is a plate of food."
+  sketch_path: sketches/house.png
+  caption: "house"
   save_result_path: retrieval_result.jpg
 
 train:
