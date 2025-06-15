@@ -5,30 +5,21 @@ ctx.fillStyle = "#ffffff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 let drawing = false;
-
 canvas.addEventListener('pointerdown', e => {
   drawing = true;
-
-  const penType = document.getElementById("pen-type").value;
-  const penSize = parseInt(document.getElementById("pen-size").value, 3);
-
-  ctx.lineWidth = penSize;
+  ctx.lineWidth = document.getElementById("pen-size").value;
   ctx.lineCap = 'round';
-
-  if (penType === "pencil") ctx.strokeStyle = "#666666";
-  else if (penType === "pen") ctx.strokeStyle = "#000000";
-  else if (penType === "eraser") ctx.strokeStyle = "#ffffff";
+  const penType = document.getElementById("pen-type").value;
+  ctx.strokeStyle = penType === 'eraser' ? "#ffffff" : "#000000";
 
   const r = canvas.getBoundingClientRect();
   ctx.beginPath();
   ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
 });
-
 canvas.addEventListener('pointerup', () => {
   drawing = false;
   ctx.beginPath();
 });
-
 canvas.addEventListener('pointermove', e => {
   if (!drawing) return;
   const r = canvas.getBoundingClientRect();
@@ -41,7 +32,6 @@ function resetCanvas() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
 }
-
 document.getElementById("clear").onclick = resetCanvas;
 
 document.getElementById("submit").onclick = async () => {
@@ -63,59 +53,63 @@ document.getElementById("submit").onclick = async () => {
   const resultEl = document.getElementById("result");
   resultEl.innerHTML = "";
 
+  // Top 1 이미지
   const topImg = document.createElement("img");
-  topImg.src = results[0];
+  topImg.src = results[0].image;
   topImg.className = "top-result";
   resultEl.appendChild(topImg);
 
+  // ✅ Top 이미지 클릭 가능하게
   topImg.onclick = () => {
-    showDetail(results[0], 1);
+    const item = results[0];
+    document.getElementById("detail-image").src = item.image;
+    document.getElementById("item-name").textContent = item.name;
+    document.getElementById("item-price").textContent = `₩${Number(item.price).toLocaleString()}`;
+    document.getElementById("item-link").href = item.link;
+    document.getElementById("item-link").textContent = "Buy now";
+    document.getElementById("item-description").textContent = item.description;
+    document.getElementById("item-rating").textContent = `⭐ ${item.rating} (${item.num_reviews} reviews)`;
+
+    const detailView = document.getElementById("detail-view");
+    detailView.classList.remove("hidden");
+    void detailView.offsetWidth;
+    detailView.classList.add("visible");
+    detailView.scrollIntoView({ behavior: "smooth" });
   };
 
   const thumbContainer = document.createElement("div");
   thumbContainer.className = "thumb-container";
 
-  results.slice(1).forEach((b64, idx) => {
+  results.forEach((item, idx) => {
+    if (idx === 0) return;
+
     const img = document.createElement("img");
-    img.src = b64;
+    img.src = item.image;
     img.className = "sub-result";
+
     img.onclick = () => {
-      showDetail(b64, idx + 2);
+      document.getElementById("detail-image").src = item.image;
+      document.getElementById("item-name").textContent = item.name;
+      document.getElementById("item-price").textContent = `₩${Number(item.price).toLocaleString()}`;
+      document.getElementById("item-link").href = item.link;
+      document.getElementById("item-link").textContent = "Buy now";
+      document.getElementById("item-description").textContent = item.description;
+      document.getElementById("item-rating").textContent = `⭐ ${item.rating} (${item.num_reviews} reviews)`;
+
+      const detailView = document.getElementById("detail-view");
+      detailView.classList.remove("hidden");
+      void detailView.offsetWidth;
+      detailView.classList.add("visible");
+      detailView.scrollIntoView({ behavior: "smooth" });
     };
+
     thumbContainer.appendChild(img);
   });
 
   resultEl.appendChild(thumbContainer);
-
   resultEl.classList.remove("hidden");
   void resultEl.offsetWidth;
   resultEl.classList.add("visible");
 
   document.querySelector(".interaction-container").classList.add("show-result");
-};
-
-function showDetail(imageSrc, index) {
-  document.getElementById("detail-image").src = imageSrc;
-  document.getElementById("item-name").textContent = `Item #${index}`;
-  document.getElementById("item-price").textContent = `Price: $${index * 10}.00`;
-  document.getElementById("item-link").href = "#";
-  document.getElementById("item-link").textContent = "Buy now";
-
-  const detailView = document.getElementById("detail-view");
-  detailView.classList.remove("hidden");
-  void detailView.offsetWidth;
-  detailView.classList.add("visible");
-  detailView.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-// 스크롤 위로
-const scrollBtn = document.getElementById("scroll-top-btn");
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) scrollBtn.classList.add("show");
-  else scrollBtn.classList.remove("show");
-});
-
-scrollBtn.onclick = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
 };

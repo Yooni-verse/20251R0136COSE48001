@@ -8,11 +8,11 @@ top_k: 5
 encoding:
   batch_size: 32
   num_workers: 0
-  image_dir: images/
+  image_dir: ikea_database/ikea_images/main
 
 inference:
-  sketch_path: sketches/house.png
-  caption: "house"
+  sketch_path: sketches/COCO_val2014_000000163852.jpg
+  caption: "a plate of food with a fork and knife"
   save_result_path: retrieval_result.jpg
 
 train:
